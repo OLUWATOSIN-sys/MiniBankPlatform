@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule } from '@nestjs/mongoose';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { LedgerService } from './ledger.service';
-import { Ledger, LedgerSchema } from './schemas/ledger.schema';
+import { Ledger } from './entities/ledger.entity';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Ledger.name, schema: LedgerSchema }]),
+    TypeOrmModule.forFeature([Ledger]),
   ],
   providers: [LedgerService],
   exports: [LedgerService],
