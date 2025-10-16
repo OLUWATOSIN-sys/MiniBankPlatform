@@ -47,7 +47,7 @@ async function seed() {
         console.log(`✅ Created user: ${user.email}`);
 
         // Create initial accounts
-        await accountsService.createInitialAccounts(user._id.toString());
+        await accountsService.createInitialAccounts(user.id);
         console.log(`💰 Created accounts for ${user.email} (USD: $1000.00, EUR: €500.00)`);
       } catch (error) {
         console.error(`❌ Error creating user ${userData.email}:`, error.message);

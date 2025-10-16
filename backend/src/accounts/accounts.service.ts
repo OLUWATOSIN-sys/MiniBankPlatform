@@ -1,46 +1,49 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
-import { Account, AccountDocument, Currency } from './schemas/account.schema';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, QueryRunner } from 'typeorm';
+import { Account, Currency } from './entities/account.entity';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AccountsService {
   constructor(
-    @InjectModel(Account.name) private accountModel: Model<AccountDocument>,
+    @InjectRepository(Account)
+    private accountRepository: Repository<Account>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
-  async createInitialAccounts(userId: string): Promise<AccountDocument[]> {
-    const usdAccount = new this.accountModel({
-      userId: new Types.ObjectId(userId),
+  async createInitialAccounts(userId: string): Promise<Account[]> {
+    const usdAccount = this.accountRepository.create({
+      userId,
       currency: Currency.USD,
       balance: 1000.00,
     });
 
-    const eurAccount = new this.accountModel({
-      userId: new Types.ObjectId(userId),
+    const eurAccount = this.accountRepository.create({
+      userId,
       currency: Currency.EUR,
       balance: 500.00,
     });
 
-    return Promise.all([usdAccount.save(), eurAccount.save()]);
+    return this.accountRepository.save([usdAccount, eurAccount]);
   }
 
-  async findByUserId(userId: string): Promise<AccountDocument[]> {
-    return this.accountModel.find({ userId: new Types.ObjectId(userId) });
+  async findByUserId(userId: string): Promise<Account[]> {
+    return this.accountRepository.find({ where: { userId } });
   }
 
-  async findById(accountId: string): Promise<AccountDocument> {
-    const account = await this.accountModel.findById(accountId);
+  async findById(accountId: string): Promise<Account> {
+    const account = await this.accountRepository.findOne({ where: { id: accountId } });
     if (!account) {
       throw new NotFoundException('Account not found');
     }
     return account;
   }
 
-  async findByUserIdAndCurrency(userId: string, currency: Currency): Promise<AccountDocument> {
-    const account = await this.accountModel.findOne({
-      userId: new Types.ObjectId(userId),
-      currency,
+  async findByUserIdAndCurrency(userId: string, currency: Currency): Promise<Account> {
+    const account = await this.accountRepository.findOne({
+      where: { userId, currency },
     });
     if (!account) {
       throw new NotFoundException(`${currency} account not found for user`);
@@ -48,8 +51,10 @@ export class AccountsService {
     return account;
   }
 
-  async updateBalance(accountId: string, amount: number, session?: any): Promise<AccountDocument> {
-    const account = await this.accountModel.findById(accountId).session(session || null);
+  async updateBalance(accountId: string, amount: number, queryRunner?: QueryRunner): Promise<Account> {
+    const repo = queryRunner ? queryRunner.manager.getRepository(Account) : this.accountRepository;
+    
+    const account = await repo.findOne({ where: { id: accountId } });
     if (!account) {
       throw new NotFoundException('Account not found');
     }
@@ -61,7 +66,7 @@ export class AccountsService {
     }
 
     account.balance = newBalance;
-    return account.save({ session });
+    return repo.save(account);
   }
 
   async getBalance(accountId: string): Promise<number> {
@@ -74,36 +79,15 @@ export class AccountsService {
   }
 
   async findAllUsers(): Promise<any[]> {
-    const accounts = await this.accountModel.aggregate([
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'userId',
-          foreignField: '_id',
-          as: 'user',
-        },
-      },
-      {
-        $unwind: '$user',
-      },
-      {
-        $group: {
-          _id: '$userId',
-          firstName: { $first: '$user.firstName' },
-          lastName: { $first: '$user.lastName' },
-          email: { $first: '$user.email' },
-        },
-      },
-      {
-        $project: {
-          userId: '$_id',
-          firstName: 1,
-          lastName: 1,
-          email: 1,
-          _id: 0,
-        },
-      },
-    ]);
-    return accounts;
+    const users = await this.userRepository.find({
+      select: ['id', 'firstName', 'lastName', 'email'],
+    });
+    
+    return users.map(user => ({
+      userId: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+    }));
   }
 }

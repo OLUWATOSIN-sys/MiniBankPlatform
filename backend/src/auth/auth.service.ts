@@ -18,14 +18,14 @@ export class AuthService {
     const user = await this.usersService.create(registerDto);
 
     // Create initial accounts (USD with $1000 and EUR with €500)
-    await this.accountsService.createInitialAccounts(user._id.toString());
+    await this.accountsService.createInitialAccounts(user.id);
 
     // Generate token
-    const payload = { email: user.email, sub: user._id };
+    const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
       user: {
-        id: user._id,
+        id: user.id,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -47,11 +47,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const payload = { email: user.email, sub: user._id };
+    const payload = { email: user.email, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
       user: {
-        id: user._id,
+        id: user.id,
         email: user.email,
         firstName: user.firstName,
         lastName: user.lastName,
@@ -65,7 +65,7 @@ export class AuthService {
       throw new UnauthorizedException();
     }
     return {
-      id: user._id,
+      id: user.id,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
