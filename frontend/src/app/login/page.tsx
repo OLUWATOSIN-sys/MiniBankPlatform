@@ -7,7 +7,6 @@ import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import Logo from '@/components/Logo';
 import BankingBackground from '@/components/BankingBackground';
-import { Shield, Lock, TrendingUp } from 'lucide-react';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -34,70 +33,20 @@ export default function LoginPage() {
     <>
       <BankingBackground />
       <div className="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 relative">
-        <div className="max-w-6xl w-full grid md:grid-cols-2 gap-8 items-center">
-          {/* Left Side - Branding */}
-          <div className="hidden md:block space-y-8 animate-fade-in-left">
-            <div className="space-y-4">
-              <Logo size="xl" />
-              <h1 className="text-5xl font-bold text-gray-900 leading-tight">
-                Secure Access to Your
-                <span className="block bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  Financial Portfolio
-                </span>
-              </h1>
-              <p className="text-xl text-gray-600">
-                Experience seamless digital banking with enterprise-grade security and instant transactions.
+        <div className="max-w-md w-full animate-fade-in-right">
+          <div className="bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl p-8 md:p-10 border border-white/20">
+            <div className="mb-8 flex justify-center">
+              <Logo size="lg" />
+            </div>
+
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                Sign In
+              </h2>
+              <p className="text-gray-600">
+                Access your account
               </p>
             </div>
-
-            <div className="space-y-4">
-              <div className="flex items-start gap-4 p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-blue-100 transform hover:scale-105 transition-transform duration-300">
-                <div className="p-3 bg-blue-100 rounded-lg">
-                  <Shield className="w-6 h-6 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Bank-Grade Security</h3>
-                  <p className="text-sm text-gray-600">256-bit encryption protecting your assets</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4 p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-indigo-100 transform hover:scale-105 transition-transform duration-300">
-                <div className="p-3 bg-indigo-100 rounded-lg">
-                  <TrendingUp className="w-6 h-6 text-indigo-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Real-Time Transactions</h3>
-                  <p className="text-sm text-gray-600">Instant transfers and currency exchange</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4 p-4 bg-white/60 backdrop-blur-sm rounded-xl border border-purple-100 transform hover:scale-105 transition-transform duration-300">
-                <div className="p-3 bg-purple-100 rounded-lg">
-                  <Lock className="w-6 h-6 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Compliance Certified</h3>
-                  <p className="text-sm text-gray-600">Fully regulated financial institution</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Side - Login Form */}
-          <div className="w-full animate-fade-in-right">
-            <div className="bg-white/80 backdrop-blur-xl shadow-2xl rounded-3xl p-8 md:p-10 border border-white/20">
-              <div className="md:hidden mb-6">
-                <Logo size="lg" className="justify-center" />
-              </div>
-
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  Access Your Account
-                </h2>
-                <p className="text-gray-600">
-                  Enter your credentials to securely access your banking portal
-                </p>
-              </div>
 
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <Input
@@ -134,50 +83,49 @@ export default function LoginPage() {
                   {loading ? 'Authenticating...' : 'Access Account'}
                 </Button>
 
-                <div className="text-center pt-4">
-                  <p className="text-sm text-gray-600">
-                    New to MiniBank?{' '}
-                    <Link 
-                      href="/register" 
-                      className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
-                    >
-                      Open an Account
-                    </Link>
-                  </p>
-                </div>
-              </form>
+            <div className="text-center pt-4">
+              <p className="text-sm text-gray-600">
+                New to MiniBank?{' '}
+                <Link 
+                  href="/register" 
+                  className="font-semibold text-blue-600 hover:text-blue-700 hover:underline transition-colors"
+                >
+                  Create Account
+                </Link>
+              </p>
+            </div>
+          </form>
 
-              <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
-                <p className="text-xs text-center text-blue-900 font-semibold mb-3">
-                  🔐 Demo Account - Test Our Platform
-                </p>
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="text-blue-800">
-                    <span className="font-medium">Email:</span>
-                    <p className="break-all">o.olaniran@minibank.com</p>
-                  </div>
-                  <div className="text-blue-800">
-                    <span className="font-medium">PIN:</span>
-                    <p>password123</p>
-                  </div>
-                  <div className="text-blue-800">
-                    <span className="font-medium">USD Vault:</span>
-                    <p>$25,000</p>
-                  </div>
-                  <div className="text-blue-800">
-                    <span className="font-medium">EUR Vault:</span>
-                    <p>€25,000</p>
-                  </div>
-                </div>
+          <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+            <p className="text-xs text-center text-blue-900 font-semibold mb-3">
+              Demo Account
+            </p>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="text-blue-800">
+                <span className="font-medium">Email:</span>
+                <p className="break-all">o.olaniran@minibank.com</p>
+              </div>
+              <div className="text-blue-800">
+                <span className="font-medium">PIN:</span>
+                <p>password123</p>
+              </div>
+              <div className="text-blue-800">
+                <span className="font-medium">USD:</span>
+                <p>$25,000</p>
+              </div>
+              <div className="text-blue-800">
+                <span className="font-medium">EUR:</span>
+                <p>€25,000</p>
               </div>
             </div>
-
-            <p className="text-center text-xs text-gray-500 mt-6">
-              Protected by 256-bit SSL encryption • © 2024 MiniBank • All rights reserved
-            </p>
           </div>
         </div>
+
+        <p className="text-center text-xs text-gray-500 mt-6">
+          © 2025 MiniBank
+        </p>
       </div>
+    </div>
 
       <style jsx>{`
         @keyframes fade-in-left {
