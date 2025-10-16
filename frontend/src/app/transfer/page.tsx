@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import Layout from '@/components/Layout';
@@ -12,7 +12,10 @@ import { accountsApi, transactionsApi, Account } from '@/lib/api';
 import { formatCurrency } from '@/lib/utils';
 import { ArrowRight, RefreshCw } from 'lucide-react';
 
-export default function TransferPage() {
+// Force dynamic rendering
+export const dynamic = 'force-dynamic';
+
+function TransferPageContent() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -399,5 +402,17 @@ export default function TransferPage() {
         )}
       </div>
     </Layout>
+  );
+}
+
+export default function TransferPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    }>
+      <TransferPageContent />
+    </Suspense>
   );
 }
