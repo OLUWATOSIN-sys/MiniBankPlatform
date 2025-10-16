@@ -1,6 +1,6 @@
 # Mini Banking Platform
 
-A full-stack banking application where users can manage accounts, transfer money, and exchange currencies between USD and EUR.
+Assesment Project
 
 ## What The Mini Banking Platform Does
 
