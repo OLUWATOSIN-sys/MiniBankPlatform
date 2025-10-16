@@ -23,7 +23,7 @@ async function bootstrap() {
 
   // Swagger documentation
   const config = new DocumentBuilder()
-    .setTitle('Banking Platform API')
+    .setTitle('Mini Banking Platform')
     .setDescription('Mini Banking Platform API Documentation')
     .setVersion('1.0')
     .addBearerAuth()
