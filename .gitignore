@@ -27,5 +27,3 @@ yarn-error.log*
 *.swo
 *~
 
-# Docker
-docker-compose.override.yml
