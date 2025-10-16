@@ -125,7 +125,7 @@ You can try the app with these pre-configured test accounts (or create your own)
 | alice.johnson@minibank.com | password123 | $25,000 | €25,000 |
 | bob.smith@minibank.com | password123 | $25,000 | €25,000 |
 | charlie.brown@minibank.com | password123 | $25,000 | €25,000 |
-| o.olaniran@minibank.com | password123 | $25,000 | €25,000 |
+| oluwatosin@minibank.com | password123 | $25,000 | €25,000 |
 
 **Note:** You can also create your own account using the registration page. New accounts receive $1,000 USD and €500 EUR to start transacting.
 

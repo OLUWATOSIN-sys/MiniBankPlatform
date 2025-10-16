@@ -31,7 +31,7 @@ async function seed() {
       lastName: 'Brown',
     },
     {
-      email: 'o.olaniran@minibank.com',
+      email: 'oluwatosin@minibank.com',
       password: 'password123',
       firstName: 'Oluwatosin',
       lastName: 'Olaniran',
