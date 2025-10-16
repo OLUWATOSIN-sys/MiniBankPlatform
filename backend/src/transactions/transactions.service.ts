@@ -35,11 +35,12 @@ export class TransactionsService {
 
   /**
    * Transfer funds between users (same currency)
-   * Uses MongoDB session for atomic transactions
+   * Uses TypeORM QueryRunner for atomic transactions
    */
-  async transfer(userId: string, transferDto: TransferDto): Promise<TransactionDocument> {
-    const session = await this.connection.startSession();
-    session.startTransaction();
+  async transfer(userId: string, transferDto: TransferDto): Promise<Transaction> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
     try {
       // Get sender's account
@@ -71,43 +72,43 @@ export class TransactionsService {
       }
 
       // Create transaction record
-      const transaction = new this.transactionModel({
+      const transaction = queryRunner.manager.getRepository(Transaction).create({
         type: TransactionType.TRANSFER,
         status: TransactionStatus.PENDING,
-        fromAccountId: fromAccount._id,
-        toAccountId: toAccount._id,
+        fromAccountId: fromAccount.id,
+        toAccountId: toAccount.id,
         amount,
         currency: transferDto.currency,
         description: transferDto.description || `Transfer to ${toAccount.userId}`,
       });
-      await transaction.save({ session });
+      await queryRunner.manager.save(transaction);
 
       // Update account balances
       const updatedFromAccount = await this.accountsService.updateBalance(
-        fromAccount._id.toString(),
+        fromAccount.id,
         -amount,
-        session,
+        queryRunner,
       );
       const updatedToAccount = await this.accountsService.updateBalance(
-        toAccount._id.toString(),
+        toAccount.id,
         amount,
-        session,
+        queryRunner,
       );
 
       // Create double-entry ledger records
       await this.ledgerService.createTransferEntries(
-        fromAccount._id.toString(),
-        toAccount._id.toString(),
-        transaction._id.toString(),
+        fromAccount.id,
+        toAccount.id,
+        transaction.id,
         amount,
         updatedFromAccount.balance,
         updatedToAccount.balance,
-        session,
+        queryRunner,
       );
 
       // Verify ledger balance
       const isBalanced = await this.ledgerService.verifyTransactionBalance(
-        transaction._id.toString(),
+        transaction.id,
       );
       if (!isBalanced) {
         throw new InternalServerErrorException('Ledger entries are not balanced');
@@ -115,26 +116,27 @@ export class TransactionsService {
 
       // Mark transaction as completed
       transaction.status = TransactionStatus.COMPLETED;
-      await transaction.save({ session });
+      await queryRunner.manager.save(transaction);
 
       // Commit transaction
-      await session.commitTransaction();
+      await queryRunner.commitTransaction();
       return transaction;
     } catch (error) {
-      await session.abortTransaction();
+      await queryRunner.rollbackTransaction();
       throw error;
     } finally {
-      session.endSession();
+      await queryRunner.release();
     }
   }
 
   /**
    * Exchange currency within user's accounts
-   * Uses MongoDB session for atomic transactions
+   * Uses TypeORM QueryRunner for atomic transactions
    */
-  async exchange(userId: string, exchangeDto: ExchangeDto): Promise<TransactionDocument> {
-    const session = await this.connection.startSession();
-    session.startTransaction();
+  async exchange(userId: string, exchangeDto: ExchangeDto): Promise<Transaction> {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
     try {
       // Validate currencies are different
@@ -178,56 +180,55 @@ export class TransactionsService {
       }
 
       // Create transaction record
-      const transaction = new this.transactionModel({
+      const transaction = queryRunner.manager.getRepository(Transaction).create({
         type: TransactionType.EXCHANGE,
         status: TransactionStatus.PENDING,
-        fromAccountId: fromAccount._id,
-        toAccountId: toAccount._id,
+        fromAccountId: fromAccount.id,
+        toAccountId: toAccount.id,
         amount: fromAmount,
         currency: exchangeDto.fromCurrency,
         exchangeRate,
         convertedAmount: toAmount,
         description: `Exchange ${fromAmount} ${exchangeDto.fromCurrency} to ${toAmount} ${exchangeDto.toCurrency}`,
       });
-      await transaction.save({ session });
+      await queryRunner.manager.save(transaction);
 
       // Update account balances
       const updatedFromAccount = await this.accountsService.updateBalance(
-        fromAccount._id.toString(),
+        fromAccount.id,
         -fromAmount,
-        session,
+        queryRunner,
       );
       const updatedToAccount = await this.accountsService.updateBalance(
-        toAccount._id.toString(),
+        toAccount.id,
         toAmount,
-        session,
+        queryRunner,
       );
 
       // Create double-entry ledger records
       await this.ledgerService.createExchangeEntries(
-        fromAccount._id.toString(),
-        toAccount._id.toString(),
-        transaction._id.toString(),
+        fromAccount.id,
+        toAccount.id,
+        transaction.id,
         fromAmount,
         toAmount,
         updatedFromAccount.balance,
         updatedToAccount.balance,
-        exchangeRate,
-        session,
+        queryRunner,
       );
 
       // Mark transaction as completed
       transaction.status = TransactionStatus.COMPLETED;
-      await transaction.save({ session });
+      await queryRunner.manager.save(transaction);
 
       // Commit transaction
-      await session.commitTransaction();
+      await queryRunner.commitTransaction();
       return transaction;
     } catch (error) {
-      await session.abortTransaction();
+      await queryRunner.rollbackTransaction();
       throw error;
     } finally {
-      session.endSession();
+      await queryRunner.release();
     }
   }
 
@@ -240,18 +241,18 @@ export class TransactionsService {
   ): Promise<{ transactions: any[]; total: number; page: number; limit: number }> {
     // Get user's accounts
     const accounts = await this.accountsService.findByUserId(userId);
-    const accountIds = accounts.map(acc => acc._id);
+    const accountIds = accounts.map(acc => acc.id);
 
     // Build query
-    const query: any = {
-      $or: [
-        { fromAccountId: { $in: accountIds } },
-        { toAccountId: { $in: accountIds } },
-      ],
-    };
+    const queryBuilder = this.transactionRepository
+      .createQueryBuilder('transaction')
+      .leftJoinAndSelect('transaction.fromAccount', 'fromAccount')
+      .leftJoinAndSelect('transaction.toAccount', 'toAccount')
+      .where('transaction.fromAccountId IN (:...accountIds)', { accountIds })
+      .orWhere('transaction.toAccountId IN (:...accountIds)', { accountIds });
 
     if (queryDto.type) {
-      query.type = queryDto.type;
+      queryBuilder.andWhere('transaction.type = :type', { type: queryDto.type });
     }
 
     // Calculate pagination
@@ -260,22 +261,17 @@ export class TransactionsService {
     const skip = (page - 1) * limit;
 
     // Execute query
-    const [transactions, total] = await Promise.all([
-      this.transactionModel
-        .find(query)
-        .sort({ createdAt: -1 })
-        .limit(limit)
-        .skip(skip)
-        .populate('fromAccountId', 'currency userId')
-        .populate('toAccountId', 'currency userId'),
-      this.transactionModel.countDocuments(query),
-    ]);
+    const [transactions, total] = await queryBuilder
+      .orderBy('transaction.createdAt', 'DESC')
+      .skip(skip)
+      .take(limit)
+      .getManyAndCount();
 
     // Format response
     const formattedTransactions = transactions.map(tx => {
-      const isDebit = accountIds.some(id => id.toString() === tx.fromAccountId._id.toString());
+      const isDebit = accountIds.includes(tx.fromAccountId);
       return {
-        id: tx._id,
+        id: tx.id,
         type: tx.type,
         status: tx.status,
         amount: tx.amount,
@@ -284,8 +280,8 @@ export class TransactionsService {
         convertedAmount: tx.convertedAmount,
         description: tx.description,
         isDebit,
-        fromAccount: tx.fromAccountId,
-        toAccount: tx.toAccountId,
+        fromAccount: tx.fromAccount,
+        toAccount: tx.toAccount,
         createdAt: tx.createdAt,
       };
     });

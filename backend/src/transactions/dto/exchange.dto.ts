@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, Min } from 'class-validator';
-import { Currency } from '../../accounts/schemas/account.schema';
+import { IsEnum, IsNumber, Min, IsNotEmpty } from 'class-validator';
+import { Currency } from '../../accounts/entities/account.entity';
 
 export class ExchangeDto {
   @ApiProperty({ enum: Currency, example: Currency.USD })
-  @IsNotEmpty()
+  @IsEnum(Currency)
   fromCurrency: Currency;
 
   @ApiProperty({ enum: Currency, example: Currency.EUR })

@@ -30,10 +30,10 @@ export class TransactionsController {
     );
     return {
       success: true,
-      transactionId: transaction._id,
+      transactionId: transaction.id,
       message: 'Transfer completed successfully',
       transaction: {
-        id: transaction._id,
+        id: transaction.id,
         type: transaction.type,
         amount: transaction.amount,
         currency: transaction.currency,
@@ -52,10 +52,10 @@ export class TransactionsController {
     );
     return {
       success: true,
-      transactionId: transaction._id,
+      transactionId: transaction.id,
       message: 'Exchange completed successfully',
       transaction: {
-        id: transaction._id,
+        id: transaction.id,
         type: transaction.type,
         amount: transaction.amount,
         currency: transaction.currency,

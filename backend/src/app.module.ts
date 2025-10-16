@@ -33,7 +33,7 @@ import { AuditLog } from './audit/entities/audit-log.entity';
             entities: [User, Account, Transaction, Ledger, AuditLog],
             synchronize: !isProduction, // Only sync in development
             logging: !isProduction,
-            ssl: isProduction ? { rejectUnauthorized: false } : false,
+            ssl: { rejectUnauthorized: false }, // Always use SSL for Render PostgreSQL
           };
         }
         

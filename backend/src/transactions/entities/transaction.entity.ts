@@ -48,7 +48,7 @@ export class Transaction {
 
   @Column({
     type: 'enum',
-    enum: Currency,
+    enum: ['USD', 'EUR'],
   })
   currency: Currency;
 

@@ -1,7 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsEnum, IsNumber, Min } from 'class-validator';
-import { Type } from 'class-transformer';
-import { TransactionType } from '../schemas/transaction.schema';
+import { IsOptional, IsString, IsEnum, IsNumber, Min } from 'class-validator';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform, Type } from 'class-transformer';
+import { TransactionType } from '../entities/transaction.entity';
 
 export class QueryTransactionsDto {
   @ApiProperty({ enum: TransactionType, required: false })

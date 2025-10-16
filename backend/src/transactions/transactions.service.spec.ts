@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { getModelToken, getConnectionToken } from '@nestjs/mongoose';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { TransactionsService } from './transactions.service';
-import { Transaction } from './schemas/transaction.schema';
+import { Transaction } from './entities/transaction.entity';
 import { AccountsService } from '../accounts/accounts.service';
 import { LedgerService } from '../ledger/ledger.service';
 
@@ -11,21 +12,25 @@ describe('TransactionsService', () => {
   let accountsService: AccountsService;
   let ledgerService: LedgerService;
 
-  const mockTransactionModel = {
-    new: jest.fn(),
-    constructor: jest.fn(),
+  const mockTransactionRepository = {
+    create: jest.fn(),
+    save: jest.fn(),
     find: jest.fn(),
     findOne: jest.fn(),
-    countDocuments: jest.fn(),
-    save: jest.fn(),
+    createQueryBuilder: jest.fn(),
   };
 
-  const mockConnection = {
-    startSession: jest.fn().mockResolvedValue({
+  const mockDataSource = {
+    createQueryRunner: jest.fn().mockReturnValue({
+      connect: jest.fn(),
       startTransaction: jest.fn(),
       commitTransaction: jest.fn(),
-      abortTransaction: jest.fn(),
-      endSession: jest.fn(),
+      rollbackTransaction: jest.fn(),
+      release: jest.fn(),
+      manager: {
+        getRepository: jest.fn().mockReturnValue(mockTransactionRepository),
+        save: jest.fn(),
+      },
     }),
   };
 
@@ -50,12 +55,12 @@ describe('TransactionsService', () => {
       providers: [
         TransactionsService,
         {
-          provide: getModelToken(Transaction.name),
-          useValue: mockTransactionModel,
+          provide: getRepositoryToken(Transaction),
+          useValue: mockTransactionRepository,
         },
         {
-          provide: getConnectionToken(),
-          useValue: mockConnection,
+          provide: DataSource,
+          useValue: mockDataSource,
         },
         {
           provide: AccountsService,

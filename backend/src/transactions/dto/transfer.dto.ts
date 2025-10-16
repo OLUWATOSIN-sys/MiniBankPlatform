@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
-import { Currency } from '../../accounts/schemas/account.schema';
+import { IsString, IsNumber, IsEnum, Min, IsNotEmpty } from 'class-validator';
+import { Currency } from '../../accounts/entities/account.entity';
 
 export class TransferDto {
   @ApiProperty({ example: '507f1f77bcf86cd799439011' })
