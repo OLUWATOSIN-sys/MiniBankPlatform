@@ -19,7 +19,7 @@ services:
       - key: USD_TO_EUR_RATE
         value: 0.92
       - key: FRONTEND_URL
-        value: https://mini-bank-platform.vercel.app
+        value: https://minibankplat.vercel.app
 
 databases:
   # PostgreSQL Database
@@ -27,6 +27,3 @@ databases:
     databaseName: minibank
     user: minibank
     plan: free
-
-# Environment variables will be auto-injected for database connection:
-# DATABASE_URL will be automatically provided by Render

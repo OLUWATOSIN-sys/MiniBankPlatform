@@ -10,6 +10,13 @@ node_modules/
 /build
 /dist
 
+# Environment variables
+.env
+.env.local
+.env*.local
+backend/.env
+frontend/.env
+
 # Misc
 .DS_Store
 *.pem

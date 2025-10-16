@@ -2,9 +2,7 @@
 
 A full-stack banking application where users can manage accounts, transfer money, and exchange currencies between USD and EUR.
 
-## What This App Does
-
-This is a simplified banking system I built with the following features:
+## What The Mini Banking Platform Does
 
 - **User Authentication** - Sign up and login with JWT tokens
 - **Multiple Currency Accounts** - Each user gets USD and EUR accounts
