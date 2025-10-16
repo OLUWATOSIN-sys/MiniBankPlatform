@@ -51,8 +51,6 @@ cd MiniBankPlatform
 
 ### Running Locally (Recommended)
 
-I recommend running this locally **without Docker** for development. It's simpler and faster to set up.
-
 #### 1. Set Up the Backend
 
 ```bash
@@ -61,6 +59,7 @@ npm install
 ```
 
 Create a `.env` file in the `backend` folder:
+**Note:** I'll send you the actual `.env` file with real values separately.
 
 ```env
 NODE_ENV=development
@@ -119,16 +118,18 @@ npm run dev
 
 The app will run on http://localhost:3000
 
-### Test Account
+### Test Demo Accounts
 
-You can try the app with this test account:
+You can try the app with these pre-configured test accounts (or create your own):
 
-**Email:** o.olaniran@minibank.com  
-**Password:** password123  
-**USD Balance:** $25,000  
-**EUR Balance:** €25,000
+| Email | Password | USD Balance | EUR Balance |
+|-------|----------|-------------|-------------|
+| alice.johnson@minibank.com | password123 | $25,000 | €25,000 |
+| bob.smith@minibank.com | password123 | $25,000 | €25,000 |
+| charlie.brown@minibank.com | password123 | $25,000 | €25,000 |
+| o.olaniran@minibank.com | password123 | $25,000 | €25,000 |
 
-Or feel free to sign up and create your own account to start transacting!
+**Note:** You can also create your own account using the registration page. New accounts receive $1,000 USD and €500 EUR to start transacting.
 
 ## API Endpoints
 

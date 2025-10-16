@@ -98,24 +98,27 @@ export default function LoginPage() {
 
           <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
             <p className="text-xs text-center text-blue-900 font-semibold mb-3">
-              Test (Demo) account below — you can create yours own above.
+              Test Demo Accounts (or create your own above)
             </p>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="text-blue-800">
-                <span className="font-medium">Email:</span>
-                <p className="break-all">o.olaniran@minibank.com</p>
+            <div className="space-y-2 text-xs text-blue-800">
+              <div className="flex justify-between items-center">
+                <span className="font-medium">alice.johnson@minibank.com</span>
+                <span className="text-blue-600">password123</span>
               </div>
-              <div className="text-blue-800">
-                <span className="font-medium">PIN:</span>
-                <p>password123</p>
+              <div className="flex justify-between items-center">
+                <span className="font-medium">bob.smith@minibank.com</span>
+                <span className="text-blue-600">password123</span>
               </div>
-              <div className="text-blue-800">
-                <span className="font-medium">USD:</span>
-                <p>$25,000</p>
+              <div className="flex justify-between items-center">
+                <span className="font-medium">charlie.brown@minibank.com</span>
+                <span className="text-blue-600">password123</span>
               </div>
-              <div className="text-blue-800">
-                <span className="font-medium">EUR:</span>
-                <p>€25,000</p>
+              <div className="flex justify-between items-center">
+                <span className="font-medium">o.olaniran@minibank.com</span>
+                <span className="text-blue-600">password123</span>
+              </div>
+              <div className="mt-2 pt-2 border-t border-blue-200 text-center text-blue-700">
+                All accounts: $25,000 USD + €25,000 EUR
               </div>
             </div>
           </div>

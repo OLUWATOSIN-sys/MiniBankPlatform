@@ -13,6 +13,24 @@ async function seed() {
 
   const testUsers: RegisterDto[] = [
     {
+      email: 'alice.johnson@minibank.com',
+      password: 'password123',
+      firstName: 'Alice',
+      lastName: 'Johnson',
+    },
+    {
+      email: 'bob.smith@minibank.com',
+      password: 'password123',
+      firstName: 'Bob',
+      lastName: 'Smith',
+    },
+    {
+      email: 'charlie.brown@minibank.com',
+      password: 'password123',
+      firstName: 'Charlie',
+      lastName: 'Brown',
+    },
+    {
       email: 'o.olaniran@minibank.com',
       password: 'password123',
       firstName: 'Oluwatosin',
@@ -43,8 +61,11 @@ async function seed() {
     }
 
     console.log('\n🎉 Database seeding completed!');
-    console.log('\n📝 Test user created:');
-    console.log('   Email: o.olaniran@minibank.com | Password: password123');
+    console.log('\n📝 Test accounts created (all with password: password123):');
+    console.log('   alice.johnson@minibank.com');
+    console.log('   bob.smith@minibank.com');
+    console.log('   charlie.brown@minibank.com');
+    console.log('   o.olaniran@minibank.com');
   } catch (error) {
     console.error('❌ Seeding failed:', error);
   } finally {
