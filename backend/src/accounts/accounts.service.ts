@@ -13,17 +13,17 @@ export class AccountsService {
     private userRepository: Repository<User>,
   ) {}
 
-  async createInitialAccounts(userId: string): Promise<Account[]> {
+  async createInitialAccounts(userId: string, usdBalance: number = 1000.00, eurBalance: number = 500.00): Promise<Account[]> {
     const usdAccount = this.accountRepository.create({
       userId,
       currency: Currency.USD,
-      balance: 1000.00,
+      balance: usdBalance,
     });
 
     const eurAccount = this.accountRepository.create({
       userId,
       currency: Currency.EUR,
-      balance: 500.00,
+      balance: eurBalance,
     });
 
     return this.accountRepository.save([usdAccount, eurAccount]);

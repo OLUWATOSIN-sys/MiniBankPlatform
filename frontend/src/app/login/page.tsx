@@ -49,7 +49,7 @@ export default function LoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="alice@example.com"
+              placeholder="Enter your email address"
             />
             <Input
               label="Password"
@@ -73,11 +73,14 @@ export default function LoginPage() {
             </Button>
           </div>
 
-          <div className="mt-4 p-4 bg-blue-50 rounded-md">
-            <p className="text-sm text-blue-800 font-medium mb-2">Test Users:</p>
-            <p className="text-xs text-blue-700">alice@example.com / password123</p>
-            <p className="text-xs text-blue-700">bob@example.com / password123</p>
-            <p className="text-xs text-blue-700">charlie@example.com / password123</p>
+          <div className="mt-4 p-4 bg-blue-50 rounded-md border border-blue-200">
+            <p className="text-sm text-blue-800 font-semibold mb-2">Login with Test Account:</p>
+            <div className="space-y-1">
+              <p className="text-xs text-blue-700"><span className="font-medium">Email:</span> o.olaniran@minibank.com</p>
+              <p className="text-xs text-blue-700"><span className="font-medium">Password:</span> password123</p>
+              <p className="text-xs text-blue-700"><span className="font-medium">USD Balance:</span> $25,000</p>
+              <p className="text-xs text-blue-700"><span className="font-medium">EUR Balance:</span> €25,000</p>
+            </div>
           </div>
         </form>
       </div>

@@ -58,7 +58,7 @@ export default function RegisterPage() {
               value={formData.firstName}
               onChange={handleChange}
               required
-              placeholder="John"
+              placeholder="Enter your first name"
             />
             <Input
               label="Last Name"
@@ -67,7 +67,7 @@ export default function RegisterPage() {
               value={formData.lastName}
               onChange={handleChange}
               required
-              placeholder="Doe"
+              placeholder="Enter your last name"
             />
             <Input
               label="Email address"
@@ -76,7 +76,7 @@ export default function RegisterPage() {
               value={formData.email}
               onChange={handleChange}
               required
-              placeholder="john@example.com"
+              placeholder="Enter your email address"
             />
             <Input
               label="Password"
@@ -100,7 +100,7 @@ export default function RegisterPage() {
               Create account
             </Button>
             <p className="text-xs text-center text-gray-600">
-              Upon registration, you'll receive $1,000 USD and €500 EUR
+              Upon registration, you'll receive $1,000 USD and €500 EUR to start transacting
             </p>
           </div>
         </form>
