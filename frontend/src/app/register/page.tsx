@@ -119,7 +119,7 @@ export default function RegisterPage() {
 
               <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-200">
                 <p className="text-xs text-center text-green-900 font-semibold mb-2">
-                  ✨ Welcome Bonus
+                 Welcome Amount
                 </p>
                 <div className="flex justify-center gap-6 text-sm font-bold text-green-800">
                   <div>
