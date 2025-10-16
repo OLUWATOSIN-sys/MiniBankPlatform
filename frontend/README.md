@@ -1,4 +1,4 @@
-# Banking Platform Frontend
+# Mini Banking Platform Assesment
 
 Modern Next.js frontend for the Mini Banking Platform with React 18 and Tailwind CSS.
 
@@ -54,33 +54,6 @@ The application will be available at `http://localhost:3000`
 ```bash
 npm run build
 npm run start
-```
-
-## Project Structure
-
-```
-src/
-├── app/                    # Next.js app router pages
-│   ├── dashboard/         # Dashboard page
-│   ├── login/             # Login page
-│   ├── register/          # Registration page
-│   ├── transactions/      # Transaction history
-│   ├── transfer/          # Transfer & exchange forms
-│   ├── layout.tsx         # Root layout
-│   ├── page.tsx           # Home page (redirects)
-│   └── globals.css        # Global styles
-├── components/            # React components
-│   ├── ui/               # Reusable UI components
-│   │   ├── Button.tsx
-│   │   ├── Card.tsx
-│   │   ├── Input.tsx
-│   │   └── Select.tsx
-│   └── Layout.tsx        # Main layout with navigation
-├── contexts/             # React contexts
-│   └── AuthContext.tsx   # Authentication context
-└── lib/                  # Utilities and API
-    ├── api.ts            # API client and endpoints
-    └── utils.ts          # Helper functions
 ```
 
 ## Pages
