@@ -6,44 +6,43 @@ import { authApi, User, LoginData, RegisterData } from '@/lib/api';
 
 interface AuthContextType {
   user: User | null;
+  token: string | null;
   loading: boolean;
   login: (data: LoginData) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
-  logout: () => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is logged in by calling /auth/me
-    // Cookie will be sent automatically
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
-    try {
-      const userData = await authApi.getProfile();
-      setUser(userData);
-    } catch (error) {
-      // User not authenticated, cookie invalid or missing
-      setUser(null);
-    } finally {
-      setLoading(false);
+    // Check if user is logged in
+    const storedToken = localStorage.getItem('token');
+    const storedUser = localStorage.getItem('user');
+    
+    if (storedToken && storedUser) {
+      setToken(storedToken);
+      setUser(JSON.parse(storedUser));
     }
-  };
+    setLoading(false);
+  }, []);
 
   const login = async (data: LoginData) => {
     try {
       const response = await authApi.login(data);
-      const { user: userData } = response;
+      const { access_token, user: userData } = response;
       
-      // Cookie is set automatically by the browser
+      setToken(access_token);
       setUser(userData);
+      
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(userData));
       
       router.push('/dashboard');
     } catch (error: any) {
@@ -54,10 +53,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (data: RegisterData) => {
     try {
       const response = await authApi.register(data);
-      const { user: userData } = response;
+      const { access_token, user: userData } = response;
       
-      // Cookie is set automatically by the browser
+      setToken(access_token);
       setUser(userData);
+      
+      localStorage.setItem('token', access_token);
+      localStorage.setItem('user', JSON.stringify(userData));
       
       router.push('/dashboard');
     } catch (error: any) {
@@ -65,20 +67,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const logout = async () => {
-    try {
-      // Call logout endpoint to clear cookie on server
-      await authApi.logout();
-    } catch (error) {
-      // Ignore error, clear client state anyway
-    } finally {
-      setUser(null);
-      router.push('/login');
-    }
+  const logout = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    router.push('/login');
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

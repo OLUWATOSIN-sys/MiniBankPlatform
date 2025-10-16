@@ -7,7 +7,17 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true, // Enable sending cookies with requests
+});
+
+// Add token to requests
+api.interceptors.request.use((config) => {
+  if (typeof window !== 'undefined') {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  }
+  return config;
 });
 
 // Handle auth errors
@@ -16,6 +26,8 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         window.location.href = '/login';
       }
     }
@@ -85,10 +97,6 @@ export const authApi = {
   },
   login: async (data: LoginData) => {
     const response = await api.post('/auth/login', data);
-    return response.data;
-  },
-  logout: async () => {
-    const response = await api.post('/auth/logout');
     return response.data;
   },
   getProfile: async () => {
