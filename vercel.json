@@ -1,31 +1,10 @@
 {
-  "version": 2,
-  "name": "mini-bank-platform",
-  "builds": [
-    {
-      "src": "frontend/package.json",
-      "use": "@vercel/next",
-      "config": {
-        "projectSettings": {
-          "framework": "nextjs",
-          "buildCommand": "npm run build",
-          "outputDirectory": ".next"
-        }
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
-    }
-  ],
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/.next",
+  "installCommand": "cd frontend && npm install",
+  "devCommand": "cd frontend && npm run dev",
+  "framework": "nextjs",
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://minibank-backend.onrender.com"
-  },
-  "functions": {
-    "frontend/pages/**/*.js": {
-      "maxDuration": 30
-    }
+    "NEXT_PUBLIC_API_URL": "https://minibankplatform.onrender.com"
   }
 }
