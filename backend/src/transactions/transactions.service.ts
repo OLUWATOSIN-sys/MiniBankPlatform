@@ -4,25 +4,26 @@ import {
   NotFoundException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { InjectModel, InjectConnection } from '@nestjs/mongoose';
-import { Model, Connection, Types } from 'mongoose';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
-import { Transaction, TransactionDocument, TransactionType, TransactionStatus } from './schemas/transaction.schema';
+import { Transaction, TransactionType, TransactionStatus } from './entities/transaction.entity';
 import { AccountsService } from '../accounts/accounts.service';
 import { LedgerService } from '../ledger/ledger.service';
 import { TransferDto } from './dto/transfer.dto';
 import { ExchangeDto } from './dto/exchange.dto';
 import { QueryTransactionsDto } from './dto/query-transactions.dto';
-import { Currency } from '../accounts/schemas/account.schema';
-import { LedgerEntryType } from '../ledger/schemas/ledger.schema';
+import { Currency } from '../accounts/entities/account.entity';
+import { LedgerEntryType } from '../ledger/entities/ledger.entity';
 
 @Injectable()
 export class TransactionsService {
   private readonly USD_TO_EUR_RATE: number;
 
   constructor(
-    @InjectModel(Transaction.name) private transactionModel: Model<TransactionDocument>,
-    @InjectConnection() private connection: Connection,
+    @InjectRepository(Transaction)
+    private transactionRepository: Repository<Transaction>,
+    private dataSource: DataSource,
     private accountsService: AccountsService,
     private ledgerService: LedgerService,
     private configService: ConfigService,

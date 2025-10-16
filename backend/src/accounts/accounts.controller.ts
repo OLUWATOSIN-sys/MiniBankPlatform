@@ -19,7 +19,7 @@ export class AccountsController {
   async getAccounts(@Request() req) {
     const accounts = await this.accountsService.findByUserId(req.user.userId);
     return accounts.map(account => ({
-      id: account._id,
+      id: account.id,
       currency: account.currency,
       balance: account.balance,
       createdAt: account.createdAt,
@@ -45,7 +45,7 @@ export class AccountsController {
     }
 
     return {
-      accountId: account._id,
+      accountId: account.id,
       currency: account.currency,
       balance: account.balance,
     };
