@@ -5,9 +5,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(amount: number, currency: string): string {
+export function formatCurrency(amount: number | string | null | undefined, currency: string): string {
   const symbol = currency === 'USD' ? '$' : '€';
-  return `${symbol}${amount.toFixed(2)}`;
+  const numAmount = typeof amount === 'number' ? amount : parseFloat(String(amount || 0));
+  return `${symbol}${numAmount.toFixed(2)}`;
 }
 
 export function formatDate(date: string): string {
