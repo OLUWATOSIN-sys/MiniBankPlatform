@@ -98,7 +98,7 @@ export default function LoginPage() {
 
           <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
             <p className="text-xs text-center text-blue-900 font-semibold mb-3">
-              Demo Account
+              Test (Demo) account below — you can create yours own above.
             </p>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="text-blue-800">
