@@ -22,10 +22,24 @@ export class Ledger {
   @Column()
   transactionId: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', { 
+    precision: 10, 
+    scale: 2,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value),
+    }
+  })
   amount: number; // Positive for credit, negative for debit
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', { 
+    precision: 10, 
+    scale: 2,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value),
+    }
+  })
   balanceAfter: number; // Balance after this entry
 
   @Column({

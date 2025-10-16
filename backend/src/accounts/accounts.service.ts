@@ -59,7 +59,9 @@ export class AccountsService {
       throw new NotFoundException('Account not found');
     }
 
-    const newBalance = this.roundToTwoDecimals(account.balance + amount);
+    // Convert balance to number (PostgreSQL decimal returns as string)
+    const currentBalance = typeof account.balance === 'string' ? parseFloat(account.balance) : account.balance;
+    const newBalance = this.roundToTwoDecimals(currentBalance + amount);
     
     if (newBalance < 0) {
       throw new BadRequestException('Insufficient funds');

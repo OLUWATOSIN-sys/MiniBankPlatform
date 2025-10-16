@@ -43,7 +43,14 @@ export class Transaction {
   @Column({ nullable: true })
   toAccountId: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column('decimal', { 
+    precision: 10, 
+    scale: 2,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value),
+    }
+  })
   amount: number;
 
   @Column({
@@ -52,10 +59,26 @@ export class Transaction {
   })
   currency: Currency;
 
-  @Column('decimal', { precision: 10, scale: 4, nullable: true })
+  @Column('decimal', { 
+    precision: 10, 
+    scale: 4, 
+    nullable: true,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string | null) => value ? parseFloat(value) : null,
+    }
+  })
   exchangeRate: number;
 
-  @Column('decimal', { precision: 10, scale: 2, nullable: true })
+  @Column('decimal', { 
+    precision: 10, 
+    scale: 2, 
+    nullable: true,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string | null) => value ? parseFloat(value) : null,
+    }
+  })
   convertedAmount: number;
 
   @Column({ nullable: true })

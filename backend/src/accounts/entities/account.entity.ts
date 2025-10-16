@@ -22,7 +22,15 @@ export class Account {
   })
   currency: Currency;
 
-  @Column('decimal', { precision: 10, scale: 2, default: 0 })
+  @Column('decimal', { 
+    precision: 10, 
+    scale: 2, 
+    default: 0,
+    transformer: {
+      to: (value: number) => value,
+      from: (value: string) => parseFloat(value),
+    }
+  })
   balance: number;
 
   @Column({ default: true })
